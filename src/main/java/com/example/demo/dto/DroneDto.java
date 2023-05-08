@@ -1,23 +1,28 @@
 package com.example.demo.dto;
 
-import com.example.demo.enm.DroneModel;
-import com.example.demo.enm.DroneState;
+import com.example.demo.entity.MedicationEntity;
+import com.example.demo.enums.DroneModel;
+import com.example.demo.enums.DroneState;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 public class DroneDto {
     @Size(max = 100)
-    String serial_number;
+    private String serial_number;
 
-    DroneModel model;
+    private DroneModel model;
+
     @Size(max = 500)
-    Double weight_limit;
+    private Double weight_limit;
 
     @Size(max = 100)
-    Double battery_capacity;
+    private Double battery_capacity;
 
-    DroneState state;
+    private DroneState state;
+
+    private List<MedicationEntity> medications;
 
 }

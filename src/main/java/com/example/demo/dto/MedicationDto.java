@@ -1,13 +1,16 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.DroneEntity;
 import lombok.Data;
 
 @Data
 public class MedicationDto {
-    String name;
-    Double weight;
-    String code;
-    String image;
+    private Long id;
+    private String name;
+    private Double weight;
+    private String code;
+    private String image;
+    private DroneEntity drone;
 
 
     public void setName(String name) {

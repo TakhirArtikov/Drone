@@ -13,11 +13,15 @@ public class MedicationEntity {
     private long id;
 
     @Column(name = "name")
-    String name;
+    private String name;
     @Column(name = "weight")
-    Double weight;
+    private Double weight;
     @Column(name = "code")
-    String code;
+    private String code;
     @Column(name = "image")
-    String image;
+    private String image;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "serail_number", nullable = false)
+    private DroneEntity drone;
+
 }
