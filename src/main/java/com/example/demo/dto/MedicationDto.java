@@ -3,14 +3,21 @@ package com.example.demo.dto;
 import com.example.demo.entity.DroneEntity;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 public class MedicationDto {
     private Long id;
+    @NotBlank
     private String name;
+    @NotNull
     private Double weight;
+    @NotBlank
     private String code;
     private String image;
-    private DroneEntity drone;
+    private String droneSerialNumber;
+
 
 
     public void setName(String name) {

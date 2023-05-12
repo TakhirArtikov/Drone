@@ -20,8 +20,10 @@ public class MedicationEntity {
     private String code;
     @Column(name = "image")
     private String image;
+    @Column(name = "serial_number")
+    private String droneSerialNumber;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "serail_number", nullable = false)
+    @JoinColumn(name = "serial_number",insertable = false,updatable = false)
     private DroneEntity drone;
 
 }

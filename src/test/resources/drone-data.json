@@ -1,0 +1,16 @@
+[
+  {
+    "serialNumber":"asdf1234",
+    "model":"LIGHTWEIGHT",
+    "weightLimit":500,
+    "batteryCapacity":55,
+    "state": "IDLE"
+  },
+  {
+    "serialNumber":"12fkjhljhlj87687687",
+    "model":"LIGHTWEIGHT",
+    "weightLimit":500,
+    "batteryCapacity":55,
+    "state": "IDLE"
+  }
+]

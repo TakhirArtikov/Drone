@@ -2,27 +2,29 @@ package com.example.demo.mapper;
 
 import com.example.demo.dto.DroneDto;
 import com.example.demo.entity.DroneEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DroneMapper {
 
     public DroneEntity toEntity(DroneDto dto) {
         DroneEntity entity=new DroneEntity();
-        entity.setBattery_capacity(dto.getBattery_capacity());
+        entity.setBatteryCapacity(dto.getBatteryCapacity());
         entity.setModel(dto.getModel());
         entity.setState(dto.getState());
-        entity.setSerial_number(dto.getSerial_number());
-        entity.setWeight_limit(dto.getWeight_limit());
+        entity.setSerialNumber(dto.getSerialNumber());
+        entity.setWeightLimit(dto.getWeightLimit());
         entity.setMedications(dto.getMedications());
         return entity;
     }
 
     public DroneDto toDto(DroneEntity entity) {
         DroneDto dto=new DroneDto();
-        dto.setBattery_capacity(entity.getBattery_capacity());
+        dto.setBatteryCapacity(entity.getBatteryCapacity());
         dto.setModel(entity.getModel());
         dto.setState(entity.getState());
-        dto.setSerial_number(entity.getSerial_number());
-        dto.setWeight_limit(entity.getWeight_limit());
+        dto.setSerialNumber(entity.getSerialNumber());
+        dto.setWeightLimit(entity.getWeightLimit());
         dto.setMedications(entity.getMedications());
         return dto;
     }

@@ -5,21 +5,25 @@ import com.example.demo.enums.DroneModel;
 import com.example.demo.enums.DroneState;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
 public class DroneDto {
+    @NotBlank
     @Size(max = 100)
-    private String serial_number;
+    private String serialNumber;
 
     private DroneModel model;
-
-    @Size(max = 500)
-    private Double weight_limit;
-
-    @Size(max = 100)
-    private Double battery_capacity;
+    @NotNull
+    @Max(500)
+    private Double weightLimit;
+    @NotNull
+    @Max(100)
+    private Double batteryCapacity;
 
     private DroneState state;
 

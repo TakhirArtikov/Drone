@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class LoadDto {
     String droneSerialNumber;
-    Long medicationId;
+    MedicationDto dto;
 }

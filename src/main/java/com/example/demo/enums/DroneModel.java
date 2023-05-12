@@ -1,6 +1,7 @@
 package com.example.demo.enums;
 
+
 public enum DroneModel {
-    LIGHTWEIGHT, MIDDLEWEIGHT, CRUISERWEIGHT, HEAVYWEIGHT
+    LIGHTWEIGHT, MIDDLEWEIGHT, CRUISERWEIGHT, HEAVYWEIGHT;
 
 }

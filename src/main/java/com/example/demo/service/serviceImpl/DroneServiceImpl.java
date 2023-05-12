@@ -1,7 +1,6 @@
 package com.example.demo.service.serviceImpl;
 
 import com.example.demo.dto.DroneDto;
-import com.example.demo.dto.LoadDto;
 import com.example.demo.dto.MedicationDto;
 import com.example.demo.entity.DroneEntity;
 import com.example.demo.entity.MedicationEntity;
@@ -12,10 +11,12 @@ import com.example.demo.repository.DroneRepository;
 import com.example.demo.repository.MedicationRepository;
 import com.example.demo.service.DroneService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,40 +33,47 @@ public class DroneServiceImpl implements DroneService {
         droneRepository.save(entity);
     }
 
+    @SneakyThrows
     @Override
-    public void load(LoadDto dto) {
-        DroneEntity entity = droneRepository.findBySerialNumber(dto.getDroneSerialNumber());
-        MedicationEntity medicationEntity = medicationRepository.findById(dto.getMedicationId()).get();
+    public void load(MedicationDto dto) {
+        MedicationEntity medicationEntity = medicationMapper.toEntity(dto);
+        Optional<DroneEntity> droneEntity = Optional.ofNullable(droneRepository.findBySerialNumber(dto.getDroneSerialNumber()));
+        if (droneEntity.isPresent()) {
+            if ((getDroneWeightSum(droneEntity.get().getSerialNumber()) + medicationEntity.getWeight()) < 500 && droneEntity.get().getBatteryCapacity() >= 25
+                    && (droneEntity.get().getState().equals(DroneState.IDLE) || droneEntity.get().getState().equals(DroneState.LOADING))) {
+                droneEntity.get().setState(DroneState.LOADING);
 
-        if ((getDroneWeightSum(dto.getDroneSerialNumber()) + medicationEntity.getWeight()) < 500 && entity.getBattery_capacity() >= 25
-                && (entity.getState().equals(DroneState.IDLE) || entity.getState().equals(DroneState.LOADING))) {
-            entity.setState(DroneState.LOADING);
-            entity.setMedications((List<MedicationEntity>) medicationEntity);
-            if (entity.getWeight_limit() == 500) {
-                entity.setState(DroneState.LOADED);
+                if (getDroneWeightSum(droneEntity.get().getSerialNumber()) == 500) {
+                    droneEntity.get().setState(DroneState.LOADED);
+                    droneRepository.save(droneEntity.get());
+                } else {
+                    droneEntity.get().setState(DroneState.IDLE);
+                    droneRepository.save(droneEntity.get());
+                }
+                medicationRepository.save(medicationEntity);
             } else {
-                entity.setState(DroneState.IDLE);
+                throw new IllegalArgumentException("Drone is not loaded because of conditions in if case !");
             }
-            droneRepository.save(entity);
+        }else {
+            throw new IllegalArgumentException("Drone is not registered yet !");
         }
-
     }
 
     @Override
-    public List<DroneDto> checkAvailableDrone() {
-        List<DroneDto> dtos = new ArrayList<>();
-        List<DroneEntity> entities = (List<DroneEntity>) droneRepository.findAll();
+    public List<String> checkAvailableDrone() {
+        List<String> droneIdList=new ArrayList<>();
+        List<DroneEntity> entities =droneRepository.findAll();
         for (DroneEntity drone : entities) {
             if (drone.getState().equals(DroneState.IDLE)) {
-                dtos.add(droneMapper.toDto(drone));
+                droneIdList.add(drone.getSerialNumber());
             }
         }
 
-        return dtos;
+        return droneIdList.stream().toList();
     }
 
     @Override
-    public MedicationDto checkMedicationItems(String serialNumber) {
+    public List<MedicationDto> checkMedicationItems(String serialNumber) {
 
         DroneEntity entity = droneRepository.findBySerialNumber(serialNumber);
         List<MedicationEntity> medications = entity.getMedications();
@@ -75,24 +83,20 @@ public class DroneServiceImpl implements DroneService {
             dtos.add(medicationMapper.toDto(medication));
         }
 
-        return (MedicationDto) dtos;
+        return dtos;
     }
 
     @Override
     public Double getBatteryLevel(String serialNumber) {
 
         DroneEntity entity = droneRepository.findBySerialNumber(serialNumber);
-        Double battery = entity.getBattery_capacity();
-        return battery;
+        return entity.getBatteryCapacity();
     }
 
     private Double getDroneWeightSum(String serialNumber) {
         Double sum = 0.0;
         DroneEntity entity = droneRepository.findBySerialNumber(serialNumber);
-        List<MedicationEntity> medications = new ArrayList<>();
-        for (MedicationEntity medication : entity.getMedications()) {
-            medications.add(medication);
-        }
+        List<MedicationEntity> medications = new ArrayList<>(entity.getMedications());
         for (Double w : medications.stream().map(MedicationEntity::getWeight).toList()) {
             sum += w;
         }

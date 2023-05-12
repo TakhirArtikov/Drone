@@ -13,14 +13,20 @@ import java.util.List;
 public class DroneEntity {
 
     @Id
-    private String serial_number;
+    private String serialNumber;
+
     @Column(name = "model")
+    @Enumerated(EnumType.STRING)
     private DroneModel model;
+
     @Column(name = "weight_limit")
-    private Double weight_limit;
+    private Double weightLimit;
+
     @Column(name = "battery_capacity")
-    private Double battery_capacity;
+    private Double batteryCapacity;
+
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private DroneState state;
 
     @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
